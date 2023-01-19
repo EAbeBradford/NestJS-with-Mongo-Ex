@@ -5,25 +5,49 @@ import { Product } from './product.model';
 @Injectable()
 export class ProductService {
 
-    private products:Product[] = [];
+    private products: Product[] = [];
 
-    insertProduct(title:string, desc:string, price: number){
+    insertProduct(title: string, desc: string, price: number) {
         const prodId = Math.random().toString();
         const newProduct = new Product(prodId, title, desc, price);
         this.products.push(newProduct);
         return prodId;
     }
 
-    getAllProducts(){
+    getAllProducts() {
         return [...this.products];
     }
 
-    getProductById(productId: string){
-        const product = this.products.find((prod)=> prod.id ===productId);
-        if(!product){
-            throw new NotFoundException('product does not exist');
-        }
-        return {... product};
+    getProductById(productId: string) {
+        const product = this.findProduct(productId)[0];
+        return { ...product };
     }
 
+
+    updateProductById(productId: string, prodTitle: string, prodDescription: string, prodPrice: number) {
+        const [product, index]= this.findProduct(productId);
+        const updatedProduct = {...product};
+        console.log("pre", updatedProduct.price);
+        console.log("param", prodPrice);
+        if(prodTitle){
+            updatedProduct.title = prodTitle;
+        }
+        if(prodDescription){
+            updatedProduct.description = prodDescription;
+        }
+        if(prodPrice){
+            updatedProduct.price = prodPrice;
+        }
+        console.log(updatedProduct.price);
+        this.products[index] = updatedProduct;
+    }
+
+    private findProduct(productId: string): [Product, number]{
+        const productIndex = this.products.findIndex((prod) => prod.id === productId);
+        const product = this.products[productIndex];
+        if (!product) {
+            throw new NotFoundException('product does not exist');
+        }
+        return [product, productIndex];
+    }
 }
