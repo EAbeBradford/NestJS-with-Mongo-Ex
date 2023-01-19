@@ -1,3 +1,17 @@
+- steps befre watching tutorial
+- sudo npm i -g @nestjs/cli
+- nest new products_manager
+- open vscode
+- npm start
+- look in postman
+- chnge get code to hello world from Mx. Bradford
+- nest g module product
+- nest g service product
+- nest g controller product
+
+
+
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
