@@ -29,9 +29,10 @@ export class ProductController {
         return null;
     }
 
-    // @Delete(':id')
-    // getProdyctById(@Param('id') prodId: string,) {
-    //     return this.productsService.getProductById(prodId);
-    // }
+    @Delete(':id')
+    deleteProdyctById(@Param('id') prodId: string,) {
+        this.productsService.deleteProductById(prodId);
+        return null;
+}
 
 }

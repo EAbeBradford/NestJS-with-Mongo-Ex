@@ -27,8 +27,7 @@ export class ProductService {
     updateProductById(productId: string, prodTitle: string, prodDescription: string, prodPrice: number) {
         const [product, index]= this.findProduct(productId);
         const updatedProduct = {...product};
-        console.log("pre", updatedProduct.price);
-        console.log("param", prodPrice);
+      
         if(prodTitle){
             updatedProduct.title = prodTitle;
         }
@@ -38,8 +37,13 @@ export class ProductService {
         if(prodPrice){
             updatedProduct.price = prodPrice;
         }
-        console.log(updatedProduct.price);
         this.products[index] = updatedProduct;
+    }
+
+    deleteProductById(productId: string) {
+        const  index = this.findProduct(productId)[1];
+        this.products.splice(index, 1);
+        //return { ...product };
     }
 
     private findProduct(productId: string): [Product, number]{
