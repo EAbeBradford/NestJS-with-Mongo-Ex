@@ -46,10 +46,8 @@ export class ProductService {
         // this.products[index] = updatedProduct;
     }
 
-    deleteProductById(productId: string) {
-        const index = this.findProduct(productId)[1];
-        this.products.splice(index, 1);
-        //return { ...product };
+    async deleteProductById(productId: string) {
+       await this.productModel.deleteOne({id: productId}).exec();
     }
 
     private async  findProduct(productId: string): Promise<Product> {

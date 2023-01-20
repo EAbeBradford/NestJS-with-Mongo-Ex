@@ -27,14 +27,14 @@ export class ProductController {
     }
 
     @Patch(':id')
-    updateProdyctById(@Param('id') prodId: string, @Body('title') prodTitle: string, @Body('description') prodDesc: string, @Body('price') prodPrice: number,) {
-        this.productsService.updateProductById(prodId, prodTitle, prodDesc, prodPrice);
+    async updateProdyctById(@Param('id') prodId: string, @Body('title') prodTitle: string, @Body('description') prodDesc: string, @Body('price') prodPrice: number,) {
+        await this.productsService.updateProductById(prodId, prodTitle, prodDesc, prodPrice);
         return null;
     }
 
     @Delete(':id')
-    deleteProdyctById(@Param('id') prodId: string,) {
-        this.productsService.deleteProductById(prodId);
+    async deleteProdyctById(@Param('id') prodId: string,) {
+        await this.productsService.deleteProductById(prodId);
         return null;
 }
 
