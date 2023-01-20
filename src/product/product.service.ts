@@ -26,23 +26,23 @@ export class ProductService {
 
     async getProductById(productId: string) {
         const product = await (await this.findProduct(productId));
-        return product;
+        return {id: product.id, title: product.title, description: product.description, price: product.price};
     }
 
 
-    updateProductById(productId: string, prodTitle: string, prodDescription: string, prodPrice: number) {
-        // const [product, index] = this.findProduct(productId);
-        // const updatedProduct = { ...product };
+    async updateProductById(productId: string, prodTitle: string, prodDescription: string, prodPrice: number) {
+        const updatedProduct = await this.findProduct(productId);
 
-        // if (prodTitle) {
-        //     updatedProduct.title = prodTitle;
-        // }
-        // if (prodDescription) {
-        //     updatedProduct.description = prodDescription;
-        // }
-        // if (prodPrice) {
-        //     updatedProduct.price = prodPrice;
-        // }
+        if (prodTitle) {
+            updatedProduct.title = prodTitle;
+        }
+        if (prodDescription) {
+            updatedProduct.description = prodDescription;
+        }
+        if (prodPrice) {
+            updatedProduct.price = prodPrice;
+        }
+        updatedProduct.save();
         // this.products[index] = updatedProduct;
     }
 
@@ -53,10 +53,17 @@ export class ProductService {
     }
 
     private async  findProduct(productId: string): Promise<Product> {
-        const product =await  this.productModel.findById(productId)
+        let product;
+        try{
+            product =await  this.productModel.findById(productId)
+
+        } catch(error){
+            throw new NotFoundException('product does not exist');
+
+        }
         if (!product) {
             throw new NotFoundException('product does not exist');
         }
-        return {id: product.id, title: product.title, description: product.description, price: product.price};
+        return product;
     }
 }
