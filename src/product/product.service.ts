@@ -8,7 +8,6 @@ import { title } from 'process';
 @Injectable()
 export class ProductService {
 
-    private products: Product[] = [];
 
     constructor(@InjectModel('Product') private readonly productModel: Model<Product>) { }
 
@@ -21,12 +20,12 @@ export class ProductService {
 
     async getAllProducts() {
         const products = await this.productModel.find().exec();
-        return products.map(prod=> ({id: prod.id, title: prod.title, descrption: prod.description, price: prod.price})); 
+        return products.map(prod => ({ id: prod.id, title: prod.title, descrption: prod.description, price: prod.price }));
     }
 
     async getProductById(productId: string) {
         const product = await (await this.findProduct(productId));
-        return {id: product.id, title: product.title, description: product.description, price: product.price};
+        return { id: product.id, title: product.title, description: product.description, price: product.price };
     }
 
 
@@ -47,15 +46,20 @@ export class ProductService {
     }
 
     async deleteProductById(productId: string) {
-       await this.productModel.deleteOne({id: productId}).exec();
+        const result = await this.productModel.deleteOne({ _id: productId }).exec();
+        if (result.deletedCount === 0) {
+            throw new NotFoundException('product does not exist');
+        }
+
+        console.log(result);
     }
 
-    private async  findProduct(productId: string): Promise<Product> {
+    private async findProduct(productId: string): Promise<Product> {
         let product;
-        try{
-            product =await  this.productModel.findById(productId)
+        try {
+            product = await this.productModel.findById(productId)
 
-        } catch(error){
+        } catch (error) {
             throw new NotFoundException('product does not exist');
 
         }
