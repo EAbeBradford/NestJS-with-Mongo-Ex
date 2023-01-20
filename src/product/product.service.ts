@@ -3,6 +3,7 @@ import { ignoreElements } from 'rxjs';
 import { Product } from './product.model';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { title } from 'process';
 
 @Injectable()
 export class ProductService {
@@ -20,29 +21,29 @@ export class ProductService {
 
     async getAllProducts() {
         const products = await this.productModel.find().exec();
-        return products as Product[];
+        return products.map(prod=> ({id: prod.id, title: prod.title, descrption: prod.description, price: prod.price})); 
     }
 
-    getProductById(productId: string) {
-        const product = this.findProduct(productId)[0];
-        return { ...product };
+    async getProductById(productId: string) {
+        const product = await (await this.findProduct(productId));
+        return product;
     }
 
 
     updateProductById(productId: string, prodTitle: string, prodDescription: string, prodPrice: number) {
-        const [product, index] = this.findProduct(productId);
-        const updatedProduct = { ...product };
+        // const [product, index] = this.findProduct(productId);
+        // const updatedProduct = { ...product };
 
-        if (prodTitle) {
-            updatedProduct.title = prodTitle;
-        }
-        if (prodDescription) {
-            updatedProduct.description = prodDescription;
-        }
-        if (prodPrice) {
-            updatedProduct.price = prodPrice;
-        }
-        this.products[index] = updatedProduct;
+        // if (prodTitle) {
+        //     updatedProduct.title = prodTitle;
+        // }
+        // if (prodDescription) {
+        //     updatedProduct.description = prodDescription;
+        // }
+        // if (prodPrice) {
+        //     updatedProduct.price = prodPrice;
+        // }
+        // this.products[index] = updatedProduct;
     }
 
     deleteProductById(productId: string) {
@@ -51,12 +52,11 @@ export class ProductService {
         //return { ...product };
     }
 
-    private findProduct(productId: string): [Product, number] {
-        const productIndex = this.products.findIndex((prod) => prod.id === productId);
-        const product = this.products[productIndex];
+    private async  findProduct(productId: string): Promise<Product> {
+        const product =await  this.productModel.findById(productId)
         if (!product) {
             throw new NotFoundException('product does not exist');
         }
-        return [product, productIndex];
+        return {id: product.id, title: product.title, description: product.description, price: product.price};
     }
 }
